@@ -5,7 +5,7 @@ import MultiPageForm from "./MultiPageForm";
 import { useUser } from '@clerk/nextjs'
 
 export default function Habits() {
-  const [habits, setHabits] = useState<string[][]>([]);
+  const [habits, setHabits] = useState<any[]>([]);
   const [popup, showPopup] = useState(false);
 
   const addHabit = () => showPopup(true);
@@ -53,7 +53,7 @@ function Header({ addHabit } : { addHabit: () => void }) {
     );
 }
 
-function HabitList({ habits } : { habits: string[][] }) {
+function HabitList({ habits } : { habits: any[] }) {
     return (
         <div className="my-16">
         {habits.map((habit, index) => (
@@ -62,7 +62,7 @@ function HabitList({ habits } : { habits: string[][] }) {
         </div>
     );
 }
-function HabitItem({ habit } : { habit: string[] }) {
+function HabitItem({ habit } : { habit: any[] }) {
     return (
         <div className="flex flex-row items-center text-lg">
         <Checkbox />
@@ -73,11 +73,12 @@ function HabitItem({ habit } : { habit: string[] }) {
         </div>
     );
 }
-function HabitDetails({ habit } : { habit: string[] }) {
+function HabitDetails({ habit } : { habit: any[] }) {
+    alert(habit[0]);
     return (
         <div className="flex flex-col px-4">
-            <div>{habit[0]}</div>
-            <div>{habit[1]} Minutes</div>
+            <div>{habit.habitName}</div>
+            <div>{habit.goal} Minutes</div>
         </div>
     );
 }
