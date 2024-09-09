@@ -1,28 +1,31 @@
 import React, { useState } from "react";
+import Habit from "../models/Habit";
 
 interface FormProps {
     closePopup: () => void;
-    setHabits: React.Dispatch<React.SetStateAction<any[]>>;
-    habits: any[];
+    setHabits: React.Dispatch<React.SetStateAction<Habit[]>>;
+    habits: Habit[];
 }
 const unitsOfMeasurement = ["minutes", "miles", "steps", "reps", "hours"];
 const daysOfWeek = ["Sun", "Mon", "Tues", "Wed", "Thu", "Fri", "Sat"];
 export default function MultiPageForm({ closePopup, setHabits, habits }: FormProps) {
-    const [newHabits, setNewHabits] = useState<any[]>([{ habitName: "", goal: "", unit: "", days: Array(7).fill(true) }]);
+    const [newHabits, setNewHabits] = useState<Habit[]>([new Habit("", 0, "minutes")]);
     const [page, setPage] = useState(1);
     const minPage = 1;
     const maxPage = 3;
 
     const addHabit = () => {
-        setNewHabits([...newHabits, { habitName: "", goal: "", unit: "", days: Array(7).fill(true) }]);
+        setNewHabits([...newHabits, new Habit("", 0, "minutes")]);
     };
 
     const updateHabit = (index: number, field: string, value: string | boolean, day = -1) => {
         const updatedHabits = [...newHabits];
         if (day != -1) {
             //  Update a single day
-            const updatedDays = [...updatedHabits[index][field]];
-            updatedDays[day] = value;
+            const updatedDays = [...updatedHabits[index].days];
+            if (typeof value === "boolean") {
+                updatedDays[day] = value;
+            }
 
             updatedHabits[index] = { ...updatedHabits[index], [field]: updatedDays };
         } else {
@@ -41,7 +44,11 @@ export default function MultiPageForm({ closePopup, setHabits, habits }: FormPro
     };
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        setHabits(newHabits);
+        if (habits.length === 0) {
+            setHabits([...newHabits]);
+        } else {
+            setHabits([...habits, ...newHabits]);
+        }
         closePopup(); 
     };
 
@@ -82,7 +89,6 @@ export default function MultiPageForm({ closePopup, setHabits, habits }: FormPro
                                         className="border p-2 rounded w-2/4 mr-2"
                                         onChange={(e) => updateHabit(index, "unit", e.target.value)}
                                         >
-                                        <option value="">unit</option>
                                         {unitsOfMeasurement.map((unit) => (
                                             <option key={unit} value={unit}>
                                                 {unit}

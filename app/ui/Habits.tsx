@@ -3,9 +3,10 @@ import Checkbox from "./Checkbox";
 import { useState, useEffect } from "react";
 import MultiPageForm from "./MultiPageForm";
 import { useUser } from '@clerk/nextjs'
+import Habit from "../models/Habit";
 
 export default function Habits() {
-  const [habits, setHabits] = useState<any[]>([]);
+  const [habits, setHabits] = useState<Habit[]>([]);
   const [popup, showPopup] = useState(false);
 
   const addHabit = () => showPopup(true);
@@ -20,6 +21,10 @@ export default function Habits() {
   useEffect(() => {
     getHabits();
   }, []);
+
+  useEffect(() => {
+    console.log(habits);
+  }, [habits]);
 
 
   return (
@@ -53,7 +58,7 @@ function Header({ addHabit } : { addHabit: () => void }) {
     );
 }
 
-function HabitList({ habits } : { habits: any[] }) {
+function HabitList({ habits } : { habits: Habit[] }) {
     return (
         <div className="my-16">
         {habits.map((habit, index) => (
@@ -62,7 +67,7 @@ function HabitList({ habits } : { habits: any[] }) {
         </div>
     );
 }
-function HabitItem({ habit } : { habit: any[] }) {
+function HabitItem({ habit } : { habit: Habit }) {
     return (
         <div className="flex flex-row items-center text-lg">
         <Checkbox />
@@ -73,12 +78,11 @@ function HabitItem({ habit } : { habit: any[] }) {
         </div>
     );
 }
-function HabitDetails({ habit } : { habit: any[] }) {
-    alert(habit[0]);
+function HabitDetails({ habit } : { habit: Habit }) {
     return (
         <div className="flex flex-col px-4">
             <div>{habit.habitName}</div>
-            <div>{habit.goal} Minutes</div>
+            <div>{habit.goal} of {habit.unit}</div>
         </div>
     );
 }
