@@ -13,7 +13,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const date = new Date();
         const formattedDate = DateFormat(date);
 
-        console.log(formattedDate);
         res.status(200).json({ date: formattedDate });
 
     }

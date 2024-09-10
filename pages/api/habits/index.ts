@@ -32,7 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         habitData.rows.forEach(habit => {
           habits.push(new Habit(habit.habit_name, habit.target_value, habit.unit_of_measurement, habit.weekly_schedule.split(','), habit.habit_id));
         });
-        console.log(habits)
+        // console.log(habits)
         res.status(200).json(habits.sort((a, b) => a.id - b.id));
       } catch (error) {
         console.error('Error retrieving habits:', error);
