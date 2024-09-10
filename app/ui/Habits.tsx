@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 import MultiPageForm from "./MultiPageForm";
 import { useUser } from '@clerk/nextjs';
 import Habit from "../models/Habit";
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+// import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import Button from '@mui/material/Button';
 
 export default function Habits() {
@@ -77,7 +77,7 @@ function Header({ addHabit } : { addHabit: () => void }) {
     }
     return (
         <div className="flex flex-row items-center justify-between">
-            <h1 className="text-3xl">{user.username}'s Habit Tracker</h1>
+            <h1 className="text-3xl">{user.username}&apos;s Habit Tracker</h1>
             <button
                 className="bg-blue-500 text-white px-4 py-2 rounded"
                 onClick={addHabit}

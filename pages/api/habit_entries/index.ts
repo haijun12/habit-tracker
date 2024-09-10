@@ -1,7 +1,7 @@
 import { getAuth } from '@clerk/nextjs/server'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { sql } from '@vercel/postgres';
-import Habit from '@/app/models/Habit';
+// import { sql } from '@vercel/postgres';
+// import Habit from '@/app/models/Habit';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { userId } = getAuth(req)

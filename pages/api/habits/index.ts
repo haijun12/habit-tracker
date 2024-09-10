@@ -28,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     else if (req.method === 'GET') {
       try {
         const habitData = await sql`SELECT * FROM habits WHERE user_id = ${userId}`;
-        let habits : Habit[] = [];
+        const habits : Habit[] = [];
         habitData.rows.forEach(habit => {
           habits.push(new Habit(habit.habit_name, habit.target_value, habit.unit_of_measurement, habit.weekly_schedule.split(','), habit.habit_id));
         });
@@ -44,6 +44,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const { id } = req.body;
         console.log(id);
         const habitData = await sql`DELETE FROM habits WHERE habit_id = ${id} AND user_id = ${userId}`;
+        console.log(habitData);
         res.status(200).json({ message: 'Habit successfully deleted!' });
       } catch (error) {
         console.error('Error deleting habit:', error);
