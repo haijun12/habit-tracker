@@ -40,8 +40,20 @@ export default function MultiPageForm({ closePopup, setHabits, habits }: FormPro
     };
 
     const updatePage = (value: number) => {
-        setPage(page + value);
+        setPage(page + value);  
     };
+    function updateHabits(newHabits: Habit[]) {
+        fetch('/api/habits', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ newHabits }),
+        })
+        .then(response => response.json())
+        .then(data => console.log(data));
+
+    }
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (habits.length === 0) {
@@ -49,11 +61,12 @@ export default function MultiPageForm({ closePopup, setHabits, habits }: FormPro
         } else {
             setHabits([...habits, ...newHabits]);
         }
-        closePopup(); 
+        closePopup();
+        updateHabits(newHabits);
     };
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-10 z-50">
             <div className="bg-white p-16 rounded shadow-lg relative w-96 md:w-1/3 ">
                 <button
                     className="absolute top-4 right-4 text-black text-2xl"
@@ -63,14 +76,16 @@ export default function MultiPageForm({ closePopup, setHabits, habits }: FormPro
                 </button>
                 <form onSubmit={handleSubmit}>
                     {newHabits.map((habit, index) => (
+                        <>
+                        <div className="text-xl mb-4"> Habits:</div>
                         <div key={index} className="mb-4 flex flex-row">
                             {page === 1 &&
                                 <input
-                                    type="text"
-                                    value={habit.habitName}
-                                    placeholder={"Enter a habit!"}
-                                    className="border p-2 rounded w-3/4 mr-4"
-                                    onChange={(e) => updateHabit(index, "habitName", e.target.value)}
+                                type="text"
+                                value={habit.habitName}
+                                placeholder={"Enter a habit!"}
+                                className="border p-2 rounded w-3/4 mr-4"
+                                onChange={(e) => updateHabit(index, "habitName", e.target.value)}
                                 />
                             }
                             {page === 2 &&
@@ -103,13 +118,13 @@ export default function MultiPageForm({ closePopup, setHabits, habits }: FormPro
 
                                     {daysOfWeek.map((day, i) => (
                                         <button
-                                            type="button"
-                                            key={day}
-                                            className={`w-10 h-10 p-2 border-2 rounded-full mr-2 ${
-                                                habit.days[i] ? "bg-blue-500 text-white border-blue-500" : "bg-white text-gray-800 border-gray-300"
-                                            } hover:bg-blue-200 transition-colors`}
-                                            onClick={() => updateHabit(index, "days", !habit.days[i], i)}
-                                            >
+                                        type="button"
+                                        key={day}
+                                        className={`w-10 h-10 p-2 border-2 rounded-full mr-2 ${
+                                            habit.days[i] ? "bg-blue-500 text-white border-blue-500" : "bg-white text-gray-800 border-gray-300"
+                                        } hover:bg-blue-200 transition-colors`}
+                                        onClick={() => updateHabit(index, "days", !habit.days[i], i)}
+                                        >
                                             {day}
                                         </button>
                                     ))}
@@ -119,16 +134,17 @@ export default function MultiPageForm({ closePopup, setHabits, habits }: FormPro
                                 type="button"
                                 className="text-white bg-slate-400 p-2 px-4 rounded"
                                 onClick={() => removeHabit(index)}
-                            >
+                                >
                                 X
                             </button>
                         </div>
+                    </>
                     ))}
                     <button
                         type="button"
                         className="text-white bg-slate-500 p-2 rounded mb-4"
                         onClick={addHabit}
-                    >
+                        >
                         New Habit
                     </button>
                     {page < maxPage && (

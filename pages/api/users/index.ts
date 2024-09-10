@@ -12,12 +12,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     
     if (req.method === 'GET') {
       const user = await getUsers(userId)
-      console.log(user)
-      res.status(200).json({ message: 'Fetch users', userId});
+      res.status(200).json({ message: 'Fetch users', user});
     } else if (req.method === 'POST') {
       // Handle POST request
-      const { name, email } = req.body;
-      res.status(201).json({ message: `User ${name} created` });
+      res.status(201).json({ message: `User created` });
     } else {
       // Handle unsupported method
       res.setHeader('Allow', ['GET', 'POST']);
