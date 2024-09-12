@@ -1,71 +1,80 @@
 "use client";
-import Checkbox from "./Checkbox";
 import { useState, useEffect } from "react";
-import MultiPageForm from "./MultiPageForm";
+import MultiPageForm from "./AddHabitForm";
 import { useUser } from '@clerk/nextjs';
 import Habit from "../models/Habit";
-// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-// import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import Button from '@mui/material/Button';
+import DateDisplay from "./DateDisplay";
+import HabitList from "./HabitList";
+import EditHabitForm from "./EditHabitForm";
+import { useCallback } from "react";
 
 export default function Habits() {
     const [habits, setHabits] = useState<Habit[]>([]);
-    const [popup, showPopup] = useState(false);
-    const [date, setDate] = useState<string>('');
+    const [addPopup, showAddPopup] = useState(false);
+    const [editPopup, showEditPopup] = useState(false);
+    const [habitToEdit, setHabitToEdit] = useState<Habit | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
 
-    const addHabit = () => showPopup(true);
-    const closePopup = () => showPopup(false);
+    const addHabitPopup = () => showAddPopup(true);
+    const closeAddHabitPopup = () => showAddPopup(false);
 
-    async function getHabits() {
-        const response = await fetch('/api/habits');
-        const data = await response.json();
-        setHabits(data);
-    }
+    const editHabitPopup = (habit: Habit) => {
+      showEditPopup(true);
+      setHabitToEdit(habit);
+    };
 
-    async function getDate() {
-        const response = await fetch('/api/habit_entries');
-        const data = await response.json();
-        setDate(data.date);
-    }
+    const closeEditHabitPopup = () => {
+      showEditPopup(false);
+      setHabitToEdit(null);
+    };
 
-    useEffect(() => {
-        getHabits();
-        getDate();
-        console.log(habits);
-        console.log(date);
-    }, []);
+    const date = new Date();
+    const entryDate = date.toLocaleDateString('en-US');
+    
 
-    useEffect(() => {
-        console.log(habits);
-    }, [habits]);
-
-    function deleteHabit(id: number) {
-        fetch(`/api/habits/`, {
-            method: 'DELETE',
+    const getEntry = useCallback(async () => {
+        setIsLoading(true);
+        try {
+          const response = await fetch(`/api/daily_habits?date=${encodeURIComponent(entryDate)}`, {
+            method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
+              'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ id }),
-        })
-        .then(response => response.json())
-        .then(data => console.log(data));
-        setHabits(habits.filter(habit => habit.id !== id));
-    }
+          });
+          const data = await response.json();
+          setHabits(data);
+        } catch (error) {
+          console.error("Failed to fetch habits:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      }, [habits, entryDate]);
+
+      useEffect(() => {
+        getEntry();
+      }, []);
 
     return (
         <div className="flex flex-col h-screen p-4 m-auto max-w-xl relative overflow-auto">
-            {date && <div>{date}</div>}
-            <Header addHabit={addHabit} />
-
-            {popup && (
-                <MultiPageForm closePopup={closePopup} habits={habits} setHabits={setHabits} />
+            <Header addHabit={addHabitPopup} />
+            <DateDisplay />
+            {isLoading ? (
+                <div> Loading Habits...</div>
+            ) : (
+                <>
+                    {addPopup && (
+                        <MultiPageForm closePopup={closeAddHabitPopup} habits={habits} setHabits={setHabits} />
+                        )}
+                    {editPopup && (
+                        <EditHabitForm 
+                            closePopup={closeEditHabitPopup} 
+                            setHabits={setHabits} habits={habits} 
+                            habitToEdit={habitToEdit} 
+                        />
+                        )}
+                    <HabitList habits={habits} setHabits={setHabits} editHabit={editHabitPopup} />
+                </>
             )}
-
-            <HabitList habits={habits} deleteHabit={deleteHabit} />
-            {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DateCalendar />
-            </LocalizationProvider> */}
         </div>
     );
 }
@@ -77,7 +86,7 @@ function Header({ addHabit } : { addHabit: () => void }) {
     }
     return (
         <div className="flex flex-row items-center justify-between">
-            <h1 className="text-3xl">{user.username}&apos;s Habit Tracker</h1>
+            <h1 className="text-3xl">{user.username && user.username.charAt(0).toUpperCase() + user.username.slice(1)}&apos;s Habit Tracker</h1>
             <button
                 className="bg-blue-500 text-white px-4 py-2 rounded"
                 onClick={addHabit}
@@ -85,48 +94,5 @@ function Header({ addHabit } : { addHabit: () => void }) {
                 Add Habit
             </button>
         </div>
-    );
-}
-
-function HabitList({ habits, deleteHabit } : { habits: Habit[], deleteHabit: (id: number) => void }) {
-    let totalTime = 0;
-    return (
-        <>
-          <div className="my-8">
-              {habits.map((habit, index) => {
-                habit.unit === "minutes" ? totalTime += habit.goal : 0;
-                return <HabitItem key={index} habit={habit} deleteHabit={deleteHabit} />
-              })}
-          </div>
-          <div> Total Time: {totalTime} minutes</div>
-        </>
-    );
-}
-
-function HabitItem({ habit, deleteHabit } : { habit: Habit, deleteHabit: (id: number) => void }) {
-    return (
-        <div className="flex flex-row items-center text-lg mb-4">
-            <Checkbox />
-            <div className="flex flex-row items-center justify-between w-full">
-                <HabitDetails habit={habit} deleteHabit={deleteHabit} />
-            </div>
-        </div>
-    );
-}
-
-function HabitDetails({ habit, deleteHabit } : { habit: Habit, deleteHabit: (id: number) => void }) {
-    return (
-        <>
-            <div className="flex flex-col px-4">
-                <div>{habit.habitName}</div>
-                <div>{habit.goal} {habit.unit}</div>
-            </div>
-            <div className="flex flex-row">
-                <Button className="text-slate-500">Log</Button>
-                <Button className="text-slate-500">Timer</Button>
-                <Button className="text-slate-500"> Edit</Button>
-                <Button className="text-slate-500" onClick={() => deleteHabit(habit.id)}>Delete</Button>
-            </div>
-        </>
     );
 }

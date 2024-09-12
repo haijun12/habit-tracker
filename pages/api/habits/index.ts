@@ -27,11 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     else if (req.method === 'GET') {
       try {
-        const habitData = await sql`SELECT * FROM habits WHERE user_id = ${userId}`;
-        const habits : Habit[] = [];
-        habitData.rows.forEach(habit => {
-          habits.push(new Habit(habit.habit_name, habit.target_value, habit.unit_of_measurement, habit.weekly_schedule.split(','), habit.habit_id));
-        });
+        const habits = await getHabits(userId);
         // console.log(habits)
         res.status(200).json(habits.sort((a, b) => a.id - b.id));
       } catch (error) {
@@ -70,4 +66,13 @@ async function addHabit(habit: Habit, userId: string) {
       console.error("Error adding habit:", error);
       throw error; // Re-throw the error for proper handling in the calling code
     }
+}
+
+export async function getHabits(userId: string) {
+  const habitData = await sql`SELECT * FROM habits WHERE user_id = ${userId}`;
+  const habits : Habit[] = [];
+  habitData.rows.forEach(habit => {
+    habits.push(new Habit(habit.habit_name, habit.target_value, habit.unit_of_measurement, habit.weekly_schedule.split(','), habit.habit_id));
+  });
+  return habits;
 }

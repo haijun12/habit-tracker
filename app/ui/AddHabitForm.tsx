@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+// import AbstractPopupForm from "./common/AbstractPopupForm";
+// import { AbstractPopupFormProps,PopupFormState } from "./common/AbstractPopupForm";
 import Habit from "../models/Habit";
 
 interface FormProps {
@@ -6,6 +8,63 @@ interface FormProps {
     setHabits: React.Dispatch<React.SetStateAction<Habit[]>>;
     habits: Habit[];
 }
+
+// class AddHabitForm extends AbstractPopupForm<Habit[]> {
+//     get totalPages() {
+//         return 3;
+//     }
+
+//     addHabit = (): void => {
+//         this.setState((prevState : PopupFormState<Habit[]>) => ({
+//             data: [...prevState.data, new Habit("", 0, "minutes")],
+//         }));
+//     };
+
+//     updateHabit = (index: number, field: string, value: string | boolean, day = -1) => {
+//         const updatedHabits = [...this.state.data];
+//         if (day != -1) {
+//             //  Update a single day
+//             const updatedDays = [...updatedHabits[index].days];
+//             if (typeof value === "boolean") {
+//                 updatedDays[day] = value;
+//             }
+
+//             updatedHabits[index] = { ...updatedHabits[index], [field]: updatedDays };
+//         } else {
+//             // Update other fields
+//             updatedHabits[index] = { ...updatedHabits[index], [field]: value };
+//         }
+//         this.setState({data: updatedHabits});
+//     };
+
+//     removeHabit = (index: number) => {
+//         this.setState((prevState) => ({
+//             data: prevState.data.filter((_, i) => i !== index),
+//         }));
+//     };
+
+//     handleFormSubmit = () => {
+//         if (this.props.habits.length === 0) {
+//             this.props.setHabits([...this.state.data]);
+//         } else {
+//             this.props.setHabits([...this.props.habits, ...this.state.data]);
+//         }
+//         this.props.closePopupForm();
+//         this.updateHabitsOnServer(this.state.data);
+//     };
+
+//     updateHabitsOnServer = (newHabits: Habit[]) => {
+//         fetch("/api/habits", {
+//             method: "POST",
+//             headers: {
+//                 "Content-Type": "application/json",
+//             },
+//             body: JSON.stringify({ newHabits }),
+//         }).then((response) => response.json())
+//           .then((data) => console.log(data));
+//     };
+
+// };
 const unitsOfMeasurement = ["minutes", "miles", "steps", "reps", "hours"];
 const daysOfWeek = ["Sun", "Mon", "Tues", "Wed", "Thu", "Fri", "Sat"];
 export default function MultiPageForm({ closePopup, setHabits, habits }: FormProps) {

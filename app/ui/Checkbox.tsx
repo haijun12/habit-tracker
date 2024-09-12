@@ -1,10 +1,19 @@
 
+import Habit from "../models/Habit";
 import { useState } from "react";
-export default function Checkbox() {
-    const [isChecked, setIsChecked] = useState(false);
+import { updateEntry } from "../utils/dailyHabitsAPI";
+
+export default function Checkbox({ habit } : { habit: Habit }) {
+    const [isChecked, setIsChecked] = useState(habit.completed || habit.completedValue >= habit.goal);
 
     const handleCheckboxChange = () => {
-        setIsChecked(!isChecked);
+        setIsChecked(!habit.completed);
+        const updatedHabit = {
+            ...habit,
+            completed: !habit.completed || habit.completedValue == habit.goal,
+            completedValue: !habit.completed ? habit.goal : habit.completedValue + 0
+        }
+        updateEntry(updatedHabit);
     };
     return (
         <label className="flex items-center cursor-pointer relative">
