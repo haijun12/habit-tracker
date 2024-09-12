@@ -1,26 +1,5 @@
-"use client";
-import { useState, useEffect, use } from "react";
 export default function DateDisplay() {
-    // const [date, setDate] = useState<string>('');
-
-    // const date = new Date(); // This is your DATE or TIMESTAMP from the database
-    // const entryDate = date.toLocaleDateString('en-US');
     const formattedDate = DateFormat(new Date());
-
-    // async function getEntry() {
-    //     const response = await fetch (`/api/daily_habits?date=${encodeURIComponent(entryDate)}`, ({
-    //         method: 'GET',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //     }))
-    //     const data = await response.json();
-    //     console.log("result from api", data);
-    // }
-
-    // useEffect(() => {
-    //     getEntry();
-    // }, []);
 
 
     return (
