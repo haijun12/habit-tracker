@@ -11,12 +11,13 @@ interface FormProps {
 }
 
 export default function EditHabitForm({closePopup, setHabits, habits, habitToEdit} : FormProps) {
+    const [completedAmount, setCompletedAmount] = useState("0");
+    const [notes, setNotes] = useState(habitToEdit?.notes || "");
+    
     if (!habitToEdit) {
         return null;
     }
     const originalAmount = habitToEdit.completedValue;
-    const [completedAmount, setCompletedAmount] = useState("0");
-    const [notes, setNotes] = useState(habitToEdit.notes);
 
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
