@@ -37,9 +37,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.status(200).json({ message: 'Habits successfully retrieved!' });
     } else if (req.method === 'DELETE') {
       try {
-        const { id } = req.body;
-        console.log(id);
-        const habitData = await sql`DELETE FROM habits WHERE habit_id = ${id} AND user_id = ${userId}`;
+        const { habitId } = req.body;
+        console.log("id is", habitId);
+        const habitData = await sql`DELETE FROM habits WHERE habit_id = ${habitId} AND user_id = ${userId}`;
         console.log(habitData);
         res.status(200).json({ message: 'Habit successfully deleted!' });
       } catch (error) {

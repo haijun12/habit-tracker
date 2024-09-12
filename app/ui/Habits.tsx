@@ -7,13 +7,16 @@ import DateDisplay from "./DateDisplay";
 import HabitList from "./HabitList";
 import EditHabitForm from "./EditHabitForm";
 import { useCallback } from "react";
+import Statistics from "./Statistics";
+import useSortedHabits from "../hooks/useSortedHabits";
 
 export default function Habits() {
-    const [habits, setHabits] = useState<Habit[]>([]);
+    const [habits, setHabits] = useSortedHabits();
     const [addPopup, showAddPopup] = useState(false);
     const [editPopup, showEditPopup] = useState(false);
     const [habitToEdit, setHabitToEdit] = useState<Habit | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [currDate, setCurrDate] = useState(new Date());
 
     const addHabitPopup = () => showAddPopup(true);
     const closeAddHabitPopup = () => showAddPopup(false);
@@ -28,14 +31,11 @@ export default function Habits() {
       setHabitToEdit(null);
     };
 
-    const date = new Date();
-    const entryDate = date.toLocaleDateString('en-US');
-    
-
     const getEntry = useCallback(async () => {
         setIsLoading(true);
+        console.log(currDate);
         try {
-          const response = await fetch(`/api/daily_habits?date=${encodeURIComponent(entryDate)}`, {
+          const response = await fetch(`/api/daily_habits?date=${encodeURIComponent(currDate.toLocaleDateString('en-US'))}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -48,16 +48,16 @@ export default function Habits() {
         } finally {
           setIsLoading(false);
         }
-      }, [habits, entryDate]);
+      }, [habits, currDate]);
 
-      useEffect(() => {
+    useEffect(() => {
         getEntry();
-      }, []);
+    }, [currDate]);
 
     return (
         <div className="flex flex-col h-screen p-4 m-auto max-w-xl relative overflow-auto">
             <Header addHabit={addHabitPopup} />
-            <DateDisplay />
+            <DateDisplay setDate={setCurrDate} />
             {isLoading ? (
                 <div> Loading Habits...</div>
             ) : (
@@ -73,6 +73,7 @@ export default function Habits() {
                         />
                         )}
                     <HabitList habits={habits} setHabits={setHabits} editHabit={editHabitPopup} />
+                    <Statistics habits={habits} />
                 </>
             )}
         </div>
@@ -88,7 +89,7 @@ function Header({ addHabit } : { addHabit: () => void }) {
         <div className="flex flex-row items-center justify-between">
             <h1 className="text-3xl">{user.username && user.username.charAt(0).toUpperCase() + user.username.slice(1)}&apos;s Habit Tracker</h1>
             <button
-                className="bg-blue-500 text-white px-4 py-2 rounded"
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-slate-500"
                 onClick={addHabit}
             >
                 Add Habit

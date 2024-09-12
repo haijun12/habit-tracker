@@ -1,5 +1,7 @@
 import Checkbox from "./Checkbox";
 import Habit from "../models/Habit";
+import { updateEntry } from "../utils/dailyHabitsAPI";
+import { Reorder } from "framer-motion"
 
 interface HabitListProps {
     habits: Habit[];
@@ -7,41 +9,41 @@ interface HabitListProps {
     editHabit: (habit: Habit) => void;
 }
 
-export default function HabitList(props: HabitListProps) {
-    let totalTime = 0;
-    
-    // Calculate total time based on habit unit
-    props.habits.forEach(habit => {
-        if (habit.unit === "minutes") {
-            totalTime += habit.goal;
-        }
-    });
+export default function HabitList({ habits, setHabits, editHabit }: HabitListProps) {
+
+    function updateHabit(updatedHabit: Habit) {
+        setHabits(habits.map(habit => habit.id === updatedHabit.id ? updatedHabit : habit));
+        updateEntry(updatedHabit);
+    }
 
     return (
-        <>
-            <div className="my-8">
-                {props.habits.map((habit, index) => (
-                    <HabitItem 
-                        key={index} 
-                        habit={habit} 
-                        editHabit={props.editHabit}
-                    />
-                ))}
-            </div>
-            <div>Total Time: {totalTime} minutes</div>
-        </>
+        <Reorder.Group axis="y" values={habits} onReorder={setHabits}>
+
+        {habits.map((habit, index) => (
+            <Reorder.Item key={index} value={habit}>
+
+            <HabitItem 
+                key={index} 
+                habit={habit} 
+                editHabit={editHabit}
+                updateHabit={updateHabit}
+                />
+            </Reorder.Item>
+        ))}
+        </Reorder.Group>
     );
 }
 
 interface HabitItemProps {
     habit: Habit;
     editHabit: (habit: Habit) => void;
+    updateHabit: (habit: Habit) => void;
 }
 
-function HabitItem({ habit, editHabit }: HabitItemProps) {
+function HabitItem({ habit, editHabit, updateHabit }: HabitItemProps) {
     return (
         <div className="flex flex-row items-center text-lg mb-4">
-            <Checkbox habit={habit} />
+            <Checkbox key = {habit.id} habit={habit} updateHabit={updateHabit} />
             <div className="flex flex-row items-center justify-between w-full">
                 <div className="flex flex-col px-4">
                     <div>{habit.habitName}</div>

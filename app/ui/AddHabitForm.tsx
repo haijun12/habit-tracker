@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Habit from "../models/Habit";
+import XButton from "./XButton";
 
 interface FormProps {
     closePopup: () => void;
@@ -57,6 +58,7 @@ export default function MultiPageForm({ closePopup, setHabits, habits }: FormPro
     }
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        console.log(newHabits);
         if (habits.length === 0) {
             setHabits([...newHabits]);
         } else {
@@ -69,12 +71,7 @@ export default function MultiPageForm({ closePopup, setHabits, habits }: FormPro
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-10 z-50">
             <div className="bg-white p-16 rounded shadow-lg relative w-96 md:w-1/3 ">
-                <button
-                    className="absolute top-4 right-4 text-black text-2xl"
-                    onClick={closePopup}
-                >
-                    X
-                </button>
+                <XButton closePopup={closePopup} />
                 <form onSubmit={handleSubmit}>
                     {newHabits.map((habit, index) => (
                         <>
@@ -133,17 +130,17 @@ export default function MultiPageForm({ closePopup, setHabits, habits }: FormPro
                             }
                             <button
                                 type="button"
-                                className="text-white bg-slate-400 p-2 px-4 rounded"
+                                className="text-red-500 px-4 py-2 rounded hover:bg-slate-100"
                                 onClick={() => removeHabit(index)}
                                 >
-                                X
+                                <i className="fa-solid fa-trash"></i>
                             </button>
                         </div>
                     </>
                     ))}
                     <button
                         type="button"
-                        className="text-white bg-slate-500 p-2 rounded mb-4"
+                        className="text-white bg-slate-500 p-2 rounded mb-4 hover:bg-slate-200"
                         onClick={addHabit}
                         >
                         New Habit
@@ -151,7 +148,7 @@ export default function MultiPageForm({ closePopup, setHabits, habits }: FormPro
                     {page < maxPage && (
                         <button
                             type="button"
-                            className="absolute bottom-4 right-4 bg-blue-500 text-white px-4 py-2 rounded"
+                            className="absolute bottom-4 right-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-slate-500"
                             onClick={() => updatePage(1)}
                         >
                             Next
@@ -160,7 +157,7 @@ export default function MultiPageForm({ closePopup, setHabits, habits }: FormPro
                     {page > minPage && (
                         <button
                             type="button"
-                            className="absolute bottom-4 left-4 bg-blue-500 text-white px-4 py-2 rounded"
+                            className="absolute bottom-4 left-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-slate-500"
                             onClick={() => updatePage(-1)}
                         >
                             Prev
@@ -169,7 +166,7 @@ export default function MultiPageForm({ closePopup, setHabits, habits }: FormPro
                     {page === maxPage && (
                         <button
                             type="submit"
-                            className="absolute bottom-4 right-4 bg-blue-500 text-white px-4 py-2 rounded"
+                            className="absolute bottom-4 right-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-slate-500"
                         >
                             Submit
                         </button>
