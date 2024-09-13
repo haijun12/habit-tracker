@@ -15,21 +15,6 @@ export default function Timer({ habitToEdit, showTimerPopup, updateHabit } : Tim
     const [isActive, setIsActive] = useState(false);
     const intervalRef = useRef<number | null>(null);
 
-    if (!habitToEdit) {
-        return null;
-    }
-    function handleSubmit(e: React.FormEvent) {
-        e.preventDefault();
-        if (!habitToEdit) return;
-        const updatedHabit = {
-            ...habitToEdit,
-            completedValue: habitToEdit.completedValue + (initialStartTime - minutes),
-            completed: habitToEdit.completed || habitToEdit.completedValue + (initialStartTime - minutes) >= habitToEdit.goal,
-        };
-        updateHabit(updatedHabit);
-        showTimerPopup('timer');
-        setIsActive(false);
-    }
     useEffect(() => {
         if (isActive) {
             intervalRef.current = window.setInterval(() => {
@@ -53,6 +38,22 @@ export default function Timer({ habitToEdit, showTimerPopup, updateHabit } : Tim
         }
         return () => clearInterval(intervalRef.current!); 
     }, [isActive, minutes, seconds]);
+    
+    if (!habitToEdit) {
+        return null;
+    }
+    function handleSubmit(e: React.FormEvent) {
+        e.preventDefault();
+        if (!habitToEdit) return;
+        const updatedHabit = {
+            ...habitToEdit,
+            completedValue: habitToEdit.completedValue + (initialStartTime - minutes),
+            completed: habitToEdit.completed || habitToEdit.completedValue + (initialStartTime - minutes) >= habitToEdit.goal,
+        };
+        updateHabit(updatedHabit);
+        showTimerPopup('timer');
+        setIsActive(false);
+    }
 
     const toggleTimer = () => {
         setIsActive(!isActive);

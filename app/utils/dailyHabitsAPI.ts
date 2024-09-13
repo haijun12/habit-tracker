@@ -1,5 +1,4 @@
 import Habit from "../models/Habit";
-import { useState, useCallback } from "react";
 
 export function updateEntry(updatedHabit : Habit) {
     fetch(`/api/daily_habits`, {
