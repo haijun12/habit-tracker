@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export default function DateDisplay({ setDate }: { setDate: React.Dispatch<React.SetStateAction<Date>> }) {
+export default function DateDisplay({ CurrDate, setCurrDate }: { CurrDate: Date | null, setCurrDate: React.Dispatch<React.SetStateAction<Date>> }) {
     const [dates, setDates] = useState<string[]>([]);
     const startOfLastWeek = new Date();
     startOfLastWeek.setDate(startOfLastWeek.getDate() - 6);
@@ -16,9 +16,8 @@ export default function DateDisplay({ setDate }: { setDate: React.Dispatch<React
     }, []);
 
     const handleDateClick = (date: Date) => {
-        setDate(date);
+        setCurrDate(date);
     };
-
     return (
         <div className="flex flex-row items-center justify-between my-4">
             {dates.map((date, index) => {
@@ -27,7 +26,7 @@ export default function DateDisplay({ setDate }: { setDate: React.Dispatch<React
                 return (
                     <div 
                         key={index} 
-                        className="text-lg cursor-pointer" 
+                        className={`text-lg cursor-pointer px-2 py-2 rounded-full ${CurrDate && CurrDate.toDateString() === dateObj.toDateString() ? "bg-blue-500 text-white" : ""}`}
                         onClick={() => handleDateClick(dateObj)}
                     >
                         {date}

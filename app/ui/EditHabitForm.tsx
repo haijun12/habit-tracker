@@ -34,7 +34,6 @@ export default function EditHabitForm({closePopup, setHabits, habits, habitToEdi
     }
 
     function deleteHabit(habitId : number) {
-        console.log(habitId);
         fetch(`/api/habits/`, {
             method: 'DELETE',
             headers: {
@@ -98,20 +97,3 @@ export default function EditHabitForm({closePopup, setHabits, habits, habitToEdi
         </div>
     )
 }
-
-/* Delete currently does not work */
-// function deleteHabit({ habit, habits, setHabits } : HabitListProps & { habit: Habit }) {
-//     const habitId = habit.id;
-//     fetch(`/api/habits/`, {
-//         method: 'DELETE',
-//         headers: {
-//             'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({ habitId }),
-//     })
-//     .then(response => response.json())
-//     .then(data => console.log(data));
-//     setHabits(habits.filter(habit => habit.id !== habit.id));
-// }
-// function updateLog({ habit, habits, setHabits } : HabitListProps & { habit: Habit }) {
-// };

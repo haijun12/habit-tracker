@@ -17,7 +17,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(400).json({ error: 'Invalid date' });
         }
         const entries = await getDailyHabits(userId, date);
-        // console.log("entries", entries);
         res.status(200).json(entries);
     } else if (req.method === 'PATCH') {
         const { updatedHabit } = req.body;

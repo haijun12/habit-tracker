@@ -31,7 +31,6 @@ export default function MultiPageForm({ closePopup, setHabits, habits }: FormPro
 
             updatedHabits[index] = { ...updatedHabits[index], [field]: updatedDays };
         } else {
-            // Update other fields
             updatedHabits[index] = { ...updatedHabits[index], [field]: value };
         }
         setNewHabits(updatedHabits);
