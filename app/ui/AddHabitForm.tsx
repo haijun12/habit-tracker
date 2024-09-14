@@ -8,8 +8,8 @@ interface FormProps {
     habits: Habit[];
 }
 
-const unitsOfMeasurement = ["minutes", "miles", "steps", "reps", "hours"];
-const daysOfWeek = ["Sun", "Mon", "Tues", "Wed", "Thu", "Fri", "Sat"];
+const unitsOfMeasurement = ["minutes", "miles", "steps", "reps", "hours", "jobs"];
+const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 export default function MultiPageForm({ closePopup, setHabits, habits }: FormProps) {
     const [newHabits, setNewHabits] = useState<Habit[]>([new Habit("", 0, "minutes")]);
     const [page, setPage] = useState(1);
@@ -111,13 +111,13 @@ export default function MultiPageForm({ closePopup, setHabits, habits }: FormPro
                                 
                             }
                             {page === 3 && 
-                                <div className="flex flex-row justify-left">
+                                <div className="grid grid-cols-4 md:flex md:flex-row justify-left">
 
                                     {daysOfWeek.map((day, i) => (
                                         <button
                                         type="button"
                                         key={day}
-                                        className={`w-10 h-10 p-2 border-2 rounded-full mr-2 ${
+                                        className={`w-12 h-10 p-2 border-2 rounded-full mr-2 ${
                                             habit.days[i] ? "bg-blue-500 text-white border-blue-500" : "bg-white text-gray-800 border-gray-300"
                                         } hover:bg-blue-200 transition-colors`}
                                         onClick={() => updateHabit(index, "days", !habit.days[i], i)}

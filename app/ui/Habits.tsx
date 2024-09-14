@@ -105,7 +105,7 @@ function Header({ addHabit } : { addHabit: () => void }) {
     }
     return (
         <div className="flex flex-row items-center justify-between">
-            <h1 className="text-3xl">{user.username && user.username.charAt(0).toUpperCase() + user.username.slice(1)}&apos;s Habit Tracker</h1>
+            <h1 className="text-2xl md:text-3xl">{user.username && user.username.charAt(0).toUpperCase() + user.username.slice(1)}&apos;s Habit Tracker</h1>
             <button
                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-slate-500"
                 onClick={addHabit}
