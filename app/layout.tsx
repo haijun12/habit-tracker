@@ -34,10 +34,9 @@ export default function RootLayout({
               <SignInButton/>
             </SignedOut> */}
             <SignedIn>
-              <div className="grid justify-items-end py-4 px-8 w-full">
-
-                <UserButton />
-              </div>
+            <div className="grid justify-items-end py-4 px-8 w-full">
+              <UserButton />
+            </div>
             </SignedIn>
           </header>
           <main>{children}</main>

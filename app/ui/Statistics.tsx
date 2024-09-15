@@ -1,21 +1,19 @@
 import Habit from "../models/Habit";
 
 export default function Statistics({ habits } : { habits: Habit[] }) {
-    let totalTime = 0;
-    let completedTime = 0;
-    
+    const statMap = new Map<string, [number, number]>();
     habits.forEach(habit => {
-        if (habit.unit === "minutes") {
-            totalTime += habit.goal;
-            completedTime += habit.completedValue;
-        }
+        const [total, completed] = statMap.get(habit.unit) ?? [0, 0];
+    
+        statMap.set(habit.unit, [total + habit.goal, completed + habit.completedValue]);
     });
 
     return (
-        <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center my-4">
             <h2 className="text-gray-700 text-2xl font-bold mb-4"> Daily Stats</h2>
-            <div className="text-gray-700 text-lg font-bold">Total Time Spent: {completedTime} / {totalTime} minutes</div>
-            {/* <div className="text-gray-700 text-lg font-bold">Average Time Per Day: {Math.round(completedTime / 7)} minutes</div> */}
+            {Array.from(statMap.entries()).map(([unit, [total, completed]]) => (
+                <div key = {unit} className="text-gray-700 text-lg font-bold">{completed} / {total} {unit}</div>
+            ))}
         </div>
     );
 }

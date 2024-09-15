@@ -4,11 +4,11 @@ import { useState, useEffect, useRef } from "react";
 
 interface TimerProps {
     habitToEdit: Habit | null;
-    showTimerPopup: (popupType: 'timer' | 'edit', habit?: Habit) => void;
+    closePopup: () => void;
     updateHabit: (habit: Habit) => void;
 }
 
-export default function Timer({ habitToEdit, showTimerPopup, updateHabit } : TimerProps) {
+export default function Timer({ habitToEdit, closePopup, updateHabit } : TimerProps) {
     const [initialStartTime, setInitialStartTime] = useState(30);
     const [minutes, setMinutes] = useState(30);
     const [seconds, setSeconds] = useState(0);
@@ -51,7 +51,7 @@ export default function Timer({ habitToEdit, showTimerPopup, updateHabit } : Tim
             completed: habitToEdit.completed || habitToEdit.completedValue + (initialStartTime - minutes) >= habitToEdit.goal,
         };
         updateHabit(updatedHabit);
-        showTimerPopup('timer');
+        closePopup();
         setIsActive(false);
     }
 
@@ -69,7 +69,7 @@ export default function Timer({ habitToEdit, showTimerPopup, updateHabit } : Tim
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-10 z-50">
             <div className="bg-white p-16 rounded shadow-lg relative w-96 md:w-1/3 ">
-                <XButton closePopup={() => showTimerPopup('timer')} />
+                <XButton closePopup={() => closePopup()} />
                 <form onSubmit={handleSubmit}>
                     <h2 className="text-2xl font-bold mb-4">Timer for {habitToEdit.habitName}</h2>
                     <div className="text-6xl font-bold text-center mb-4">

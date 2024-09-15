@@ -57,7 +57,6 @@ export default function MultiPageForm({ closePopup, setHabits, habits }: FormPro
     }
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log(newHabits);
         if (habits.length === 0) {
             setHabits([...newHabits]);
         } else {

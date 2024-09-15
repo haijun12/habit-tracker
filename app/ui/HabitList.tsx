@@ -6,11 +6,11 @@ import { Reorder } from "framer-motion"
 interface HabitListProps {
     habits: Habit[];
     setHabits: React.Dispatch<React.SetStateAction<Habit[]>>;
-    editHabit: (habit: Habit) => void;
+    showEditPopup: (habit: Habit) => void;
     showTimerPopup: (habit: Habit) => void;
 }
 
-export default function HabitList({ habits, setHabits, editHabit, showTimerPopup }: HabitListProps) {
+export default function HabitList({ habits, setHabits, showEditPopup, showTimerPopup }: HabitListProps) {
 
     function updateHabit(updatedHabit: Habit) {
         setHabits(habits.map(habit => habit.id === updatedHabit.id ? updatedHabit : habit));
@@ -26,7 +26,7 @@ export default function HabitList({ habits, setHabits, editHabit, showTimerPopup
             <HabitItem 
                 key={index} 
                 habit={habit} 
-                editHabit={editHabit}
+                showEditPopup={showEditPopup}
                 updateHabit={updateHabit}
                 showTimerPopup={showTimerPopup}
             />
@@ -39,11 +39,11 @@ export default function HabitList({ habits, setHabits, editHabit, showTimerPopup
 interface HabitItemProps {
     habit: Habit;
     updateHabit: (habit: Habit) => void;
-    editHabit: (habit: Habit) => void;
+    showEditPopup: (habit: Habit) => void;
     showTimerPopup: (habit: Habit) => void;
 }
 
-function HabitItem({ habit, editHabit, updateHabit, showTimerPopup }: HabitItemProps) {
+function HabitItem({ habit, showEditPopup, updateHabit, showTimerPopup }: HabitItemProps) {
     return (
         <div className="flex flex-row items-center text-lg mb-4">
             <Checkbox key = {habit.id} habit={habit} updateHabit={updateHabit} />
@@ -59,7 +59,7 @@ function HabitItem({ habit, editHabit, updateHabit, showTimerPopup }: HabitItemP
                         <i className="fa-solid fa-stopwatch"></i>
                     </button>
                     <button className="px-4 py-2 rounded hover:bg-slate-100 text-slate-500" 
-                            onClick={() => editHabit(habit)}
+                            onClick={() => showEditPopup(habit)}
                     >
                         <i className="fa-solid fa-pen-to-square"></i>
                     </button>

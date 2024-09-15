@@ -15,7 +15,7 @@ import { updateEntry, getEntries } from "../utils/dailyHabitsAPI";
 export default function Habits() {
     const [habits, setHabits] = useSortedHabits();
     const [addPopup, showAddPopup] = useState(false);
-    const [editPopup, showEditPopup] = useState(false);
+    const [editPopup, setEditPopup] = useState(false);
     const [showTimer, setShowTimer] = useState(false);
     const [habitToEdit, setHabitToEdit] = useState<Habit | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -28,7 +28,7 @@ export default function Habits() {
         if (popupType === 'timer') {
             setShowTimer(!!habit);
         } else if (popupType === 'edit') {
-            showEditPopup(!!habit);
+            setEditPopup(!!habit);
         }
         
         setHabitToEdit(habit || null);
@@ -41,7 +41,6 @@ export default function Habits() {
 
     const getEntry = useCallback(async () => {
         setIsLoading(true);
-        console.log(currDate);
         try {
           const response = await getEntries(currDate);
           const data = await response.json();
@@ -62,38 +61,44 @@ export default function Habits() {
     }, [showTimer]);
 
     return (
-        <div className="flex flex-col h-screen p-4 m-auto max-w-xl relative overflow-auto">
+        <div className="lg:grid lg:grid-cols-6 gap-4">
+
+        <div className="col-start-3 col-span-2 h-screen p-4 m-auto w-full relative">
             <Header addHabit={addHabitPopup} />
             <DateDisplay CurrDate={currDate} setCurrDate={setCurrDate} />
             {isLoading ? (
                 <div> Loading Habits...</div>
-            ) : (
-                <>
+                ) : (
+                    <>
                     {addPopup && (
                         <MultiPageForm closePopup={addHabitPopup} habits={habits} setHabits={setHabits} />
                         )}
                     {showTimer && (
                         <Timer 
-                            showTimerPopup={() => togglePopup('timer')}
-                            habitToEdit={habitToEdit}
-                            updateHabit={updateHabit}
+                        closePopup={() => togglePopup('timer')}
+                        habitToEdit={habitToEdit}
+                        updateHabit={updateHabit}
                         />
-                    )}
+                        )}
                     {editPopup && (
                         <EditHabitForm 
-                            closePopup={() => togglePopup('edit')}
-                            setHabits={setHabits} habits={habits} 
-                            habitToEdit={habitToEdit} 
+                        closePopup={() => togglePopup('edit')}
+                        setHabits={setHabits} habits={habits} 
+                        habitToEdit={habitToEdit} 
                         />
                         )}
                     <HabitList 
                         habits={habits} 
                         setHabits={setHabits} 
-                        editHabit={(habit) => togglePopup('edit', habit)} 
-                        showTimerPopup={(habit) => togglePopup('edit', habit)}/>
-                    <Statistics habits={habits} />
+                        showEditPopup={(habit) => togglePopup('edit', habit)} 
+                        showTimerPopup={(habit) => togglePopup('timer', habit)}/>
                 </>
             )}
+        </div>
+        <div className="col-start-5 col-span-2 p-4">
+
+            <Statistics habits={habits} />
+        </div>
         </div>
     );
 }
@@ -105,6 +110,7 @@ function Header({ addHabit } : { addHabit: () => void }) {
     }
     return (
         <div className="flex flex-row items-center justify-between">
+
             <h1 className="text-2xl md:text-3xl">{user.username && user.username.charAt(0).toUpperCase() + user.username.slice(1)}&apos;s Habit Tracker</h1>
             <button
                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-slate-500"
@@ -112,6 +118,7 @@ function Header({ addHabit } : { addHabit: () => void }) {
             >
                 Add Habit
             </button>
+            
         </div>
     );
 }

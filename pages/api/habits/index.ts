@@ -72,7 +72,7 @@ export async function getHabits(userId: string) {
   const habitData = await sql`SELECT * FROM habits WHERE user_id = ${userId}`;
   const habits : Habit[] = [];
   habitData.rows.forEach(habit => {
-    habits.push(new Habit(habit.habit_name, habit.target_value, habit.unit_of_measurement, habit.weekly_schedule.split(','), habit.habit_id));
+    habits.push(new Habit(habit.habit_name, parseInt(habit.target_value), habit.unit_of_measurement, habit.weekly_schedule.split(','), habit.habit_id));
   });
   return habits;
 }
