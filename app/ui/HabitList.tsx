@@ -18,6 +18,7 @@ export default function HabitList({ habits, setHabits, showEditPopup, showTimerP
     }
 
     return (
+        <>
         <Reorder.Group axis="y" values={habits} onReorder={setHabits}>
 
         {habits.map((habit, index) => (
@@ -29,10 +30,11 @@ export default function HabitList({ habits, setHabits, showEditPopup, showTimerP
                 showEditPopup={showEditPopup}
                 updateHabit={updateHabit}
                 showTimerPopup={showTimerPopup}
-            />
+                />
             </Reorder.Item>
         ))}
         </Reorder.Group>
+        </>
     );
 }
 

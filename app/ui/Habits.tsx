@@ -20,6 +20,7 @@ export default function Habits() {
     const [habitToEdit, setHabitToEdit] = useState<Habit | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [currDate, setCurrDate] = useState(new Date());
+    const [currDayOfWeek, setCurrDayOfWeek] = useState(new Date().getDay());
 
 
     const addHabitPopup = () => showAddPopup(!addPopup);
@@ -42,7 +43,7 @@ export default function Habits() {
     const getEntry = useCallback(async () => {
         setIsLoading(true);
         try {
-          const response = await getEntries(currDate);
+          const response = await getEntries(currDate, currDayOfWeek);
           const data = await response.json();
           setHabits(data);
         } catch (error) {

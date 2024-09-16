@@ -11,12 +11,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(401).json({ error: 'Unauthorized' })
     }
     if (req.method === 'GET') {
-        const { date } = req.query;
-        console.log("date from frontend", date);
-        if (typeof date !== 'string') {
+        const { date, day } = req.query;
+        if (typeof date !== 'string' || typeof day !== 'string') {
             return res.status(400).json({ error: 'Invalid date' });
         }
-        const entries = await getDailyHabits(userId, date);
+        const entries = await getDailyHabits(userId, date, parseInt(day));
         res.status(200).json(entries);
     } else if (req.method === 'PATCH') {
         const { updatedHabit } = req.body;
@@ -40,9 +39,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 }
 
-async function getDailyHabits(userId: string, date: string) {
+async function getDailyHabits(userId: string, date: string, day: number) {
     const habits = await getHabits(userId);
-
+    // console.log(habits);
+    const filteredHabits = habits.filter(habit => habit.days[day] !== true);
+    console.log(filteredHabits);
     const entriesQuery = await sql`
         SELECT * FROM habit_entries
         WHERE user_id = ${userId} 
@@ -50,7 +51,7 @@ async function getDailyHabits(userId: string, date: string) {
     `;
     const entries = entriesQuery.rows;
 
-    const dailyHabits = await Promise.all(habits.map(async (habit) => {
+    const dailyHabits = await Promise.all(filteredHabits.map(async (habit) => {
         const entry = entries.find(e => e.habit_id === habit.id) || await addHabitEntry(habit, userId, date);
         const habitObject = new Habit(
             habit.habitName,

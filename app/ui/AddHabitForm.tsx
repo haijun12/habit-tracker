@@ -20,7 +20,7 @@ export default function MultiPageForm({ closePopup, setHabits, habits }: FormPro
         setNewHabits([...newHabits, new Habit("", 0, "minutes")]);
     };
 
-    const updateHabit = (index: number, field: string, value: string | boolean, day = -1) => {
+    const updateHabit = (index: number, field: string, value: string | boolean | number, day = -1) => {
         const updatedHabits = [...newHabits];
         if (day != -1) {
             //  Update a single day
@@ -33,6 +33,7 @@ export default function MultiPageForm({ closePopup, setHabits, habits }: FormPro
         } else {
             updatedHabits[index] = { ...updatedHabits[index], [field]: value };
         }
+        console.log(typeof(value));
         setNewHabits(updatedHabits);
     };
     
@@ -63,6 +64,7 @@ export default function MultiPageForm({ closePopup, setHabits, habits }: FormPro
             setHabits([...habits, ...newHabits]);
         }
         closePopup();
+        console.log(habits);
         updateHabits(newHabits);
     };
 
@@ -71,9 +73,9 @@ export default function MultiPageForm({ closePopup, setHabits, habits }: FormPro
             <div className="bg-white p-16 rounded shadow-lg relative w-96 md:w-1/3 ">
                 <XButton closePopup={closePopup} />
                 <form onSubmit={handleSubmit}>
+                    <div className="text-xl mb-4"> Habits:</div>
                     {newHabits.map((habit, index) => (
                         <>
-                        <div className="text-xl mb-4"> Habits:</div>
                         <div key={index} className="mb-4 flex flex-row">
                             {page === 1 &&
                                 <input
@@ -93,7 +95,7 @@ export default function MultiPageForm({ closePopup, setHabits, habits }: FormPro
                                         value={habit.goal}
                                         placeholder={"Enter a goal!"}
                                         className="border p-2 rounded w-3/4 mr-2"
-                                        onChange={(e) => updateHabit(index, "goal", e.target.value)}
+                                        onChange={(e) => updateHabit(index, "goal", parseInt(e.target.value))}
                                         />
                                     <select
                                         value={habit.unit}

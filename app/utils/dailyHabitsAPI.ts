@@ -10,8 +10,8 @@ export function updateEntry(updatedHabit : Habit) {
     })
 }
 
-export async function getEntries(currDate: Date) {
-    return await fetch(`/api/daily_habits?date=${encodeURIComponent(currDate.toLocaleDateString('en-US'))}`, {
+export async function getEntries(currDate: Date, currDayOfWeek: number) {
+    return await fetch(`/api/daily_habits?date=${encodeURIComponent(currDate.toLocaleDateString('en-US'))}&day=${currDayOfWeek}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
