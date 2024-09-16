@@ -18,12 +18,13 @@ export default function HabitList({ habits, setHabits, showEditPopup, showTimerP
     }
 
     return (
-        <>
+        <div className="overflow-y-auto h-full">
+
         <Reorder.Group axis="y" values={habits} onReorder={setHabits}>
 
         {habits.map((habit, index) => (
             <Reorder.Item key={index} value={habit}>
-
+            
             <HabitItem 
                 key={index} 
                 habit={habit} 
@@ -34,7 +35,7 @@ export default function HabitList({ habits, setHabits, showEditPopup, showTimerP
             </Reorder.Item>
         ))}
         </Reorder.Group>
-        </>
+        </div>
     );
 }
 

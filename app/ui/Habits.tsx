@@ -62,9 +62,9 @@ export default function Habits() {
     }, [showTimer]);
 
     return (
-        <div className="lg:grid lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-6 gap-4 h-screen">
 
-        <div className="col-start-3 col-span-2 h-screen p-4 m-auto w-full relative">
+        <div className="col-span-full lg:col-start-3 lg:col-span-2 h-full p-4 m-auto w-full relative">
             <Header addHabit={addHabitPopup} />
             <DateDisplay CurrDate={currDate} setCurrDate={setCurrDate} setCurrDayOfWeek={setCurrDayOfWeek} />
             {isLoading ? (
@@ -96,8 +96,7 @@ export default function Habits() {
                 </>
             )}
         </div>
-        <div className="col-start-5 col-span-2 p-4">
-
+        <div className="col-span-full lg:col-start-5 lg:col-span-2 p-4">
             <Statistics habits={habits} />
         </div>
         </div>
