@@ -66,7 +66,7 @@ export default function Habits() {
 
         <div className="col-start-3 col-span-2 h-screen p-4 m-auto w-full relative">
             <Header addHabit={addHabitPopup} />
-            <DateDisplay CurrDate={currDate} setCurrDate={setCurrDate} />
+            <DateDisplay CurrDate={currDate} setCurrDate={setCurrDate} setCurrDayOfWeek={setCurrDayOfWeek} />
             {isLoading ? (
                 <div> Loading Habits...</div>
                 ) : (

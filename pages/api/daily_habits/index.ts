@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { sql } from '@vercel/postgres';
 import Habit from '@/app/models/Habit';
 import { getHabits } from '@/pages/api/habits';
+import { filter } from 'framer-motion/client';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { userId } = getAuth(req)
@@ -41,9 +42,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 async function getDailyHabits(userId: string, date: string, day: number) {
     const habits = await getHabits(userId);
-    // console.log(habits);
-    const filteredHabits = habits.filter(habit => habit.days[day] !== true);
-    console.log(filteredHabits);
+    const filteredHabits = habits.filter(habit => { 
+        return habit.days[day].toString() === "true";
+    });
     const entriesQuery = await sql`
         SELECT * FROM habit_entries
         WHERE user_id = ${userId} 
@@ -68,6 +69,7 @@ async function getDailyHabits(userId: string, date: string, day: number) {
 
         return habitObject;
     }));
+    // console.log(dailyHabits);
     return dailyHabits;
 }
 

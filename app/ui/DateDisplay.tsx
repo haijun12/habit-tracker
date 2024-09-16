@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
+interface DateDisplayProps {
+    CurrDate: Date | null;
+    setCurrDate: React.Dispatch<React.SetStateAction<Date>>;
+    setCurrDayOfWeek: React.Dispatch<React.SetStateAction<number>>;
+}
 
-export default function DateDisplay({ CurrDate, setCurrDate }: { CurrDate: Date | null, setCurrDate: React.Dispatch<React.SetStateAction<Date>> }) {
+export default function DateDisplay({ CurrDate, setCurrDate, setCurrDayOfWeek}: DateDisplayProps) {
     // Adjust the type to match the format returned by DateFormat: [string, number]
     const [dates, setDates] = useState<[string, number][]>([]);
 
@@ -19,6 +24,7 @@ export default function DateDisplay({ CurrDate, setCurrDate }: { CurrDate: Date 
 
     const handleDateClick = (date: Date) => {
         setCurrDate(date);
+        setCurrDayOfWeek(date.getDay());
     };
 
     return (
