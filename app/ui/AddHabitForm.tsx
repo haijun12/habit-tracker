@@ -20,12 +20,12 @@ export default function MultiPageForm({ closePopup, setHabits, habits }: FormPro
         setNewHabits([...newHabits, new Habit("", 0, "minutes")]);
     };
 
-    const updateHabit = (index: number, field: string, value: string | boolean | number, day = -1) => {
+    const updateHabit = (index: number, field: string, value: string | number, day = -1) => {
         const updatedHabits = [...newHabits];
         if (day != -1) {
             //  Update a single day
             const updatedDays = [...updatedHabits[index].days];
-            if (typeof value === "boolean") {
+            if (typeof value === "string") {
                 updatedDays[day] = value;
             }
 
@@ -33,7 +33,6 @@ export default function MultiPageForm({ closePopup, setHabits, habits }: FormPro
         } else {
             updatedHabits[index] = { ...updatedHabits[index], [field]: value };
         }
-        console.log(typeof(value));
         setNewHabits(updatedHabits);
     };
     
@@ -73,7 +72,9 @@ export default function MultiPageForm({ closePopup, setHabits, habits }: FormPro
             <div className="bg-white p-16 rounded shadow-lg relative w-96 md:w-1/3 ">
                 <XButton closePopup={closePopup} />
                 <form onSubmit={handleSubmit}>
-                    <div className="text-xl mb-4"> Habits:</div>
+                    {page === 1 && <div className="text-xl mb-4"> Habits:</div>}
+                    {page === 2 && <div className="text-xl mb-4"> Measurement:</div>}
+                    {page === 3 && <div className="text-xl mb-4"> Choose days of the week:</div>}
                     {newHabits.map((habit, index) => (
                         <>
                         <div key={index} className="mb-4 flex flex-row">
@@ -119,9 +120,9 @@ export default function MultiPageForm({ closePopup, setHabits, habits }: FormPro
                                         type="button"
                                         key={day}
                                         className={`w-12 h-10 p-2 border-2 rounded-full mr-2 ${
-                                            habit.days[i] ? "bg-blue-500 text-white border-blue-500" : "bg-white text-gray-800 border-gray-300"
+                                            habit.days[i] === "true"? "bg-blue-500 text-white border-blue-500" : "bg-white text-gray-800 border-gray-300"
                                         } hover:bg-blue-200 transition-colors`}
-                                        onClick={() => updateHabit(index, "days", !habit.days[i], i)}
+                                        onClick={() => updateHabit(index, "days", habit.days[i] === "true" ? "false" : "true", i)}
                                         >
                                             {day}
                                         </button>

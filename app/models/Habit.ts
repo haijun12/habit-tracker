@@ -3,7 +3,7 @@ export default class Habit {
     habitName: string;
     goal: number;
     unit: string;
-    days: boolean[];
+    days: string[];
     entryId: number;
     entryDate: Date;
     completed: boolean;
@@ -11,7 +11,7 @@ export default class Habit {
     completedValue: number;
 
     constructor(habitName: string, goal: number, 
-                unit: string, days: boolean[] = Array(7).fill(true), 
+                unit: string, days: string[] = Array(7).fill("false"), 
                 id: number = 0, entryId: number = 0, 
                 entryDate: Date = new Date(), completed: boolean = false, 
                 notes: string = '', completedValue: number = 0) {

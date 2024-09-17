@@ -10,9 +10,16 @@ interface FormProps {
     habitToEdit: Habit | null;
 }
 
+const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
 export default function EditHabitForm({closePopup, setHabits, habits, habitToEdit} : FormProps) {
     const [completedAmount, setCompletedAmount] = useState("0");
     const [notes, setNotes] = useState(habitToEdit?.notes || "");
+    const [days, setDays] = useState<string[]>(
+        habitToEdit?.days.map(day => day === "true" ? "true" : "false") || 
+        ["false", "false", "false", "false", "false", "false", "false"]
+    );
+    console.log(days);
 
     if (!habitToEdit) {
         return null;
@@ -26,7 +33,8 @@ export default function EditHabitForm({closePopup, setHabits, habits, habitToEdi
             ...habitToEdit,
             completedValue: habitToEdit.completedValue + parseInt(completedAmount),
             completed: habitToEdit.completed || parseInt(completedAmount) >= habitToEdit.goal,
-            notes: notes
+            notes: notes,
+            days: days
         };
         updateEntry(updatedHabit);
         setHabits(habits.map(habit => habit.id === updatedHabit.id ? updatedHabit : habit));
@@ -45,7 +53,6 @@ export default function EditHabitForm({closePopup, setHabits, habits, habitToEdi
         .then(data => console.log(data));
         setHabits(habits.filter(habit => habit.id !== habitId));
     }
-
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-10 z-50">
@@ -78,8 +85,22 @@ export default function EditHabitForm({closePopup, setHabits, habits, habitToEdi
                         onChange={(e) => setNotes(e.target.value)}
                         />
                     </div>
+                    <div className="grid grid-cols-4 md:flex md:flex-row justify-left mb-4">
+                        {daysOfWeek.map((day, index) => (
+                            <button
+                            type="button"
+                            key={day}
+                            className={`w-12 h-10 p-2 border-2 rounded-full mr-2 ${
+                                days[index] === "true" ? "bg-blue-500 text-white border-blue-500" : "bg-white text-gray-800 border-gray-300"
+                            } hover:bg-blue-200 transition-colors`}
+                            onClick={() => setDays(days.map((d, i) => i === index ? (d === "true" ? "false" : "true") : d))}
+                            >
+                                {day}
+                            </button>
+                        ))}
+                    </div>
                     <div className="mb-4 text-md text-gray-700 font-bold"> 
-                    {completedAmount && `Total: ` + (originalAmount + parseInt(completedAmount)) + ` / ` + habitToEdit.goal + ` ` + habitToEdit.unit}
+                    {completedAmount && `Total: ${originalAmount + parseInt(completedAmount)} / ${habitToEdit.goal} ${habitToEdit.unit}`}
                     </div>
                     <button
                         type="submit"
