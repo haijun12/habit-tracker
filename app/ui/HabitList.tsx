@@ -14,7 +14,7 @@ export default function HabitList({ habits, setHabits, showEditPopup, showTimerP
 
     function updateHabit(updatedHabit: Habit) {
         setHabits(habits.map(habit => habit.id === updatedHabit.id ? updatedHabit : habit));
-        updateEntry(updatedHabit);
+        updateEntry(updatedHabit, "daily_habits");
     }
 
     return (
