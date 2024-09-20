@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ClerkProvider, SignedIn, UserButton } from '@clerk/nextjs'
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import Link from "next/link";
 
 // const geistSans = localFont({
 //   src: "./fonts/GeistVF.woff",
@@ -34,12 +35,18 @@ export default function RootLayout({
               <SignInButton/>
             </SignedOut> */}
             <SignedIn>
-            <div className="grid justify-items-end py-4 px-8 w-full">
+            <div className="flex justify-end items-center py-4 px-8 w-full font-serif">
+              <div className="mr-4">
+                <Link href="/Account" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-slate-500">
+                  Account
+                </Link>
+              </div>
               <UserButton />
             </div>
+
             </SignedIn>
           </header>
-          <main>{children}</main>
+          <main className="font-serif">{children}</main>
         </body>
       </html>
     </ClerkProvider>

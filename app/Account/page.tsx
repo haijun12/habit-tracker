@@ -36,13 +36,18 @@ export default function AccountView() {
                     habitToEdit={habitToEdit} 
                     />
                 )}
-                <h1 className="text-4xl font-bold mb-6 text-center">Account View</h1>
-                <Link href="/">
-                    Back to Entries
-                </Link>
+                <div className="flex flex-row justify-between">
+
+                    <h1 className="text-2xl md:text-3xl font-bold mb-6 text-center mr-4">Account View</h1>
+                    <div className="flex flex-row justify-center items-center">
+                        <Link href="/" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-slate-500">
+                        Back
+                        </Link>
+                    </div>
+                </div>
                 {habits.map(habit => (
-                    <div key={habit.id} className="flex items-center justify-between mb-4 w-full">
-                        <div>{habit.habitName}</div>
+                    <div key={habit.id} className="flex items-center justify-between mb-2 w-full">
+                        <div className="text-lg">{habit.habitName}</div>
                         <button className="px-4 py-2 rounded hover:bg-slate-100 text-slate-500" 
                             onClick={() => togglePopup(habit)}
                         >

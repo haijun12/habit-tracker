@@ -63,7 +63,7 @@ export default function EditHabitForm2({closePopup, setHabits, habits, habitToEd
                             <Input label="habitName" type="string" value={habitName} onChange={(e) => setHabitName(e.target.value)} placeholder="Enter an name!" />
                             for <Input label="goal" type="number" value={goal} onChange={(e) => setGoal(parseInt(e.target.value))} placeholder="Enter a goal!" />
                             <Input label="unit" type="string" value={unit} onChange={(e) => setUnit(e.target.value)} placeholder="Enter a unit!" /> 
-                            <div className="grid grid-cols-4 md:flex md:flex-row justify-left">
+                            <div className="grid grid-cols-4 md:flex md:flex-row justify-left my-4">
 
                                 {daysOfWeek.map((day, i) => (
                                     <button

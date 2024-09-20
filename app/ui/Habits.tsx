@@ -11,7 +11,6 @@ import Statistics from "./Statistics";
 import useSortedHabits from "../hooks/useSortedHabits";
 import Timer from "./Timer";
 import { updateEntry, getEntries } from "../utils/dailyHabitsAPI";
-import Link from "next/link";
 
 export default function Habits() {
     const [habits, setHabits] = useSortedHabits();
@@ -102,9 +101,6 @@ export default function Habits() {
         ) : (
             <div className="col-span-full lg:col-start-5 lg:col-span-2 p-4">
                 <Statistics habits={habits} />
-                <Link href="/Account" className="flex justify-center items-center hover:bg-blue-500 p-2 rounded-full">
-                Account
-                </Link>
             </div>
         )}
         </div>
@@ -119,14 +115,13 @@ function Header({ addHabit } : { addHabit: () => void }) {
     return (
         <div className="flex flex-row items-center justify-between">
 
-            <h1 className="text-2xl md:text-3xl">{user.username && user.username.charAt(0).toUpperCase() + user.username.slice(1)}&apos;s Habit Tracker</h1>
+            <h1 className="text-2xl md:text-3xl font-bold">{user.username && user.username.charAt(0).toUpperCase() + user.username.slice(1)}&apos;s Habits</h1>
             <button
                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-slate-500"
                 onClick={addHabit}
             >
                 Add Habit
             </button>
-            
         </div>
     );
 }
