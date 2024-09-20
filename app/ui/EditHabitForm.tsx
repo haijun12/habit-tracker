@@ -10,16 +10,9 @@ interface FormProps {
     habitToEdit: Habit | null;
 }
 
-const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
 export default function EditHabitForm({closePopup, setHabits, habits, habitToEdit} : FormProps) {
     const [completedAmount, setCompletedAmount] = useState("0");
     const [notes, setNotes] = useState(habitToEdit?.notes || "");
-    const [days, setDays] = useState<string[]>(
-        habitToEdit?.days.map(day => day === "true" ? "true" : "false") || 
-        ["false", "false", "false", "false", "false", "false", "false"]
-    );
-    console.log(days);
 
     if (!habitToEdit) {
         return null;
@@ -34,9 +27,8 @@ export default function EditHabitForm({closePopup, setHabits, habits, habitToEdi
             completedValue: habitToEdit.completedValue + parseInt(completedAmount),
             completed: habitToEdit.completed || parseInt(completedAmount) >= habitToEdit.goal,
             notes: notes,
-            days: days
         };
-        updateEntry(updatedHabit);
+        updateEntry(updatedHabit, "daily_habits");
         setHabits(habits.map(habit => habit.id === updatedHabit.id ? updatedHabit : habit));
         closePopup();
     }
@@ -84,20 +76,6 @@ export default function EditHabitForm({closePopup, setHabits, habits, habitToEdi
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-24"
                         onChange={(e) => setNotes(e.target.value)}
                         />
-                    </div>
-                    <div className="grid grid-cols-4 md:flex md:flex-row justify-left mb-4">
-                        {daysOfWeek.map((day, index) => (
-                            <button
-                            type="button"
-                            key={day}
-                            className={`w-12 h-10 p-2 border-2 rounded-full mr-2 ${
-                                days[index] === "true" ? "bg-blue-500 text-white border-blue-500" : "bg-white text-gray-800 border-gray-300"
-                            } hover:bg-blue-200 transition-colors`}
-                            onClick={() => setDays(days.map((d, i) => i === index ? (d === "true" ? "false" : "true") : d))}
-                            >
-                                {day}
-                            </button>
-                        ))}
                     </div>
                     <div className="mb-4 text-md text-gray-700 font-bold"> 
                     {completedAmount && `Total: ${originalAmount + parseInt(completedAmount)} / ${habitToEdit.goal} ${habitToEdit.unit}`}

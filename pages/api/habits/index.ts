@@ -46,7 +46,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         console.error('Error deleting habit:', error);
         res.status(500).json({ error: 'Internal server error' });
       }
-    } else {
+    } else if (req.method === 'PATCH') {
+      const { updatedHabit } = req.body;
+      console.log("updatedHabit", updatedHabit);
+      if (!updatedHabit || !updatedHabit.id) {
+          return res.status(400).json({ error: 'Invalid request' });
+      }
+      const { days, goal, unit, habitName, id } = updatedHabit;
+      const boolString = days.map((b: string) => b.toString()).join(',');
+
+      const entry = await sql`
+          UPDATE habits
+          SET weekly_schedule = ${boolString},
+              target_value = ${goal},
+              unit_of_measurement = ${unit},
+              habit_name = ${habitName}
+          WHERE habit_id = ${id}
+          RETURNING *;
+      `;
+
+      res.status(200).json(entry.rows);
+  } else {
       // Handle unsupported method
       res.setHeader('Allow', ['GET', 'POST']);
       res.status(405).end(`Method ${req.method} Not Allowed`);
@@ -73,6 +93,6 @@ export async function getHabits(userId: string) {
   const habits : Habit[] = [];
   habitData.rows.forEach(habit => {
     habits.push(new Habit(habit.habit_name, parseInt(habit.target_value), habit.unit_of_measurement, habit.weekly_schedule.split(','), habit.habit_id));
-  });
+  }); 
   return habits;
 }

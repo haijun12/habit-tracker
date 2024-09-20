@@ -1,7 +1,7 @@
 import Habit from "../models/Habit";
 
-export function updateEntry(updatedHabit : Habit) {
-    fetch(`/api/daily_habits`, {
+export function updateEntry(updatedHabit : Habit, apiName: string) {
+    fetch(`/api/${apiName}/`, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',

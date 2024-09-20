@@ -11,6 +11,7 @@ import Statistics from "./Statistics";
 import useSortedHabits from "../hooks/useSortedHabits";
 import Timer from "./Timer";
 import { updateEntry, getEntries } from "../utils/dailyHabitsAPI";
+import Link from "next/link";
 
 export default function Habits() {
     const [habits, setHabits] = useSortedHabits();
@@ -37,7 +38,7 @@ export default function Habits() {
 
     function updateHabit(updatedHabit: Habit) {
         setHabits(habits.map(habit => habit.id === updatedHabit.id ? updatedHabit : habit));
-        updateEntry(updatedHabit);
+        updateEntry(updatedHabit, "daily_habits");
     }
 
     const getEntry = useCallback(async () => {
@@ -96,9 +97,16 @@ export default function Habits() {
                 </>
             )}
         </div>
-        <div className="col-span-full lg:col-start-5 lg:col-span-2 p-4">
-            <Statistics habits={habits} />
-        </div>
+        {isLoading ? (
+            <div> Loading Stats...</div>
+        ) : (
+            <div className="col-span-full lg:col-start-5 lg:col-span-2 p-4">
+                <Statistics habits={habits} />
+                <Link href="/Account" className="flex justify-center items-center hover:bg-blue-500 p-2 rounded-full">
+                Account
+                </Link>
+            </div>
+        )}
         </div>
     );
 }
