@@ -22,7 +22,6 @@ export default function EditHabitForm2({closePopup, setHabits, habits, habitToEd
     if (!habitToEdit) {
         return null;
     }
-    const originalAmount = habitToEdit.completedValue;
 
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
